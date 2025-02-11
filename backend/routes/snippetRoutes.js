@@ -17,24 +17,20 @@ router.post("/add", async (req, res) => {
 // ✅ Edit an Existing Snippet
 router.put("/update/:id", async (req, res) => {
     try {
-      const { title, code, language, tags } = req.body;
+      const { title, code, language, tags } = req.body; // Include language and tags
   
       const updatedSnippet = await Snippet.findByIdAndUpdate(
         req.params.id,
-        { title, code, language, tags },
+        { title, code, language, tags }, // Save language & tags
         { new: true }
       );
   
-      if (!updatedSnippet) {
-        return res.status(404).json({ message: "Snippet not found" });
-      }
-  
       res.json(updatedSnippet);
     } catch (error) {
-      console.error("Error updating snippet:", error);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ error: "Failed to update snippet" });
     }
   });
+  
   
 
 // ✅ Delete a Snippet
