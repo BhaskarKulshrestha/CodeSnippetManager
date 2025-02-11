@@ -12,6 +12,23 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     .catch(err => console.log(err));
 
 app.get("/", (req, res) => res.send("Welcome to Code Snippet Manager API"));
+app.use(express.json()); // Ensure JSON parsing is enabled
+
+app.post("/api/snippets", async (req, res) => {
+  try {
+    const { title, language, tags, code } = req.body;
+    if (!title || !language || !code) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newSnippet = new Snippet({ title, language, tags, code });
+    await newSnippet.save();
+
+    res.status(201).json(newSnippet);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+});
 
 
 const snippetRoutes = require("./routes/snippetRoutes");

@@ -50,6 +50,18 @@ button {
 
 
 /* Styling for Tags */
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: lightgray;
+  color: black;  /* Ensure text color is black */
+  margin: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;
@@ -101,4 +113,9 @@ button {
   to {
     transform: rotate(360deg);
   }
+}
+
+.monaco-editor {
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }

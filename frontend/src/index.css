@@ -17,35 +17,3 @@ code {
   border-radius: 5px;
   overflow: hidden;
 }
-
-/* Styling for Tags */
-/* .tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px; /* Adds spacing between tags */
-}
-
-.badge {
-  background-color: #f0f0f0; /* Light gray background */
-  color: black; /* Make text black */
-  padding: 6px 12px; /* Mild padding */
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  border: 1px solid #ccc; /* Subtle border */
-  margin: 4px; /* Mild margin */
-}
-
-.badge button {
-  margin-left: 8px;
-  border: none;
-  background: transparent;
-  color: red; /* Make 'X' red for visibility */
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.badge button:hover {
-  color: darkred;
-} */

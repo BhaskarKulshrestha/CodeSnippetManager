@@ -106,18 +106,23 @@ const EditSnippet = () => {
 
       {/* Display Tags */}
       <div className="tag-list mt-3">
-        {snippet.tags.map((tag, index) => (
-          <span key={index} className="badge badge-primary m-1">
-            {tag}{" "}
-            <button
-              className="btn btn-sm btn-danger ml-2"
-              onClick={() => removeTag(tag)}
-            >
-              x
-            </button>
-          </span>
-        ))}
-      </div>
+  {snippet.tags.map((tag, index) => (
+    <span
+      key={index}
+      className="badge badge-primary m-1"
+      style={{ color: "black", backgroundColor: "lightgray" }} // Ensuring text is black
+    >
+      {tag}{" "}
+      <button
+        className="btn btn-sm btn-danger ml-2"
+        onClick={() => removeTag(tag)}
+      >
+        x
+      </button>
+    </span>
+  ))}
+</div>
+
 
       {/* Update Button */}
       <button className="btn btn-primary mt-3" onClick={handleUpdate}>
