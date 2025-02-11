@@ -1,41 +1,22 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import CodeEditor from "../components/CodeEditor";
 
-function EditSnippet() {
+const EditSnippet = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [code, setCode] = useState("");
-  const [language, setLanguage] = useState("");
-  const [tags, setTags] = useState("");
-  const [isPublic, setIsPublic] = useState(false);
+  const [snippet, setSnippet] = useState({ title: "", code: "", language: "" });
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/snippets/${id}`)
-      .then(response => {
-        const snippet = response.data;
-        setTitle(snippet.title);
-        setCode(snippet.code);
-        setLanguage(snippet.language);
-        setTags(snippet.tags.join(", "));
-        setIsPublic(snippet.public);
-      })
-      .catch(error => console.error("Error fetching snippet:", error));
+      .then((res) => setSnippet(res.data))
+      .catch((err) => console.error("Error fetching snippet:", err));
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updatedSnippet = {
-      title,
-      code,
-      language,
-      tags: tags.split(",").map(tag => tag.trim()),
-      public: isPublic
-    };
-
+  const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/snippets/edit/${id}`, updatedSnippet);
+      await axios.put(`http://localhost:5000/api/snippets/update/${id}`, snippet);
       navigate("/");
     } catch (error) {
       console.error("Error updating snippet:", error);
@@ -43,21 +24,25 @@ function EditSnippet() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Edit Snippet</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={title} onChange={e => setTitle(e.target.value)} required />
-        <textarea value={code} onChange={e => setCode(e.target.value)} required />
-        <input type="text" value={language} onChange={e => setLanguage(e.target.value)} required />
-        <input type="text" value={tags} onChange={e => setTags(e.target.value)} />
-        <label>
-          <input type="checkbox" checked={isPublic} onChange={e => setIsPublic(e.target.checked)} />
-          Make Public
-        </label>
-        <button type="submit">Save Changes</button>
-      </form>
+      <input
+        type="text"
+        value={snippet.title}
+        onChange={(e) => setSnippet({ ...snippet, title: e.target.value })}
+        placeholder="Snippet Title"
+        className="form-control mb-3"
+      />
+      <CodeEditor
+        value={snippet.code}
+        language={snippet.language}
+        onChange={(code) => setSnippet({ ...snippet, code })}
+      />
+      <button className="btn btn-primary mt-3" onClick={handleUpdate}>
+        Save Changes
+      </button>
     </div>
   );
-}
+};
 
 export default EditSnippet;

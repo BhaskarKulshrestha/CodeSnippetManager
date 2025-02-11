@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import SnippetList from "./components/SnippetList";
 import AddSnippet from "./components/AddSnippet";
 import EditSnippet from "./components/EditSnippet";
@@ -9,7 +9,14 @@ function App() {
   return (
     <Router>
       <div className="container">
-        <h1>Code Snippet Manager</h1>
+        {/* Navbar */}
+        <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+          <div className="container-fluid">
+            <Link className="navbar-brand" to="/">🚀 Code Snippet Manager</Link>
+          </div>
+        </nav>
+
+        {/* Routes */}
         <Routes>
           <Route path="/" element={<SnippetList />} />
           <Route path="/add" element={<AddSnippet />} />
