@@ -3,29 +3,29 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CodeEditor from "../components/CodeEditor";
 
-
 const EditSnippet = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [snippet, setSnippet] = useState({
     title: "",
     code: "",
     language: "",
     tags: [],
   });
+
   const [newTag, setNewTag] = useState(""); // Store new tag input
+  const [output, setOutput] = useState(""); // Stores execution output
 
   // Fetch snippet details
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/snippets/${id}`)
-      .then((res) => {
-        setSnippet(res.data);
-      })
+      .then((res) => setSnippet(res.data))
       .catch((err) => console.error("Error fetching snippet:", err));
   }, [id]);
 
-  // Function to handle snippet updates
+  // Function to update snippet
   const handleUpdate = async () => {
     try {
       await axios.put(
@@ -54,6 +54,23 @@ const EditSnippet = () => {
     });
   };
 
+  const handleRunCode = async () => {
+    setOutput("Running code...");
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/run-code", {
+        script: snippet.code,
+        language: snippet.language.toLowerCase(),
+      });
+
+      console.log("Piston API Response:", response.data);
+      setOutput(response.data.run.stdout || "No output received.");
+    } catch (error) {
+      console.error("Error running code:", error);
+      setOutput("Error executing code. Check console for details.");
+    }
+  };
+
   return (
     <div className="container">
       <h2>Edit Snippet</h2>
@@ -67,21 +84,14 @@ const EditSnippet = () => {
         className="form-control mb-3"
       />
 
-      {/* Language Dropdown */}
-      <select
+      {/* Language Input */}
+      <input
+        type="text"
         className="form-control mb-3"
         value={snippet.language || ""}
         onChange={(e) => setSnippet({ ...snippet, language: e.target.value })}
-      >
-        <option value="">Select Language</option>
-        <option value="javascript">JavaScript</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-        <option value="cpp">C++</option>
-        <option value="csharp">C#</option>
-        <option value="html">HTML</option>
-        <option value="css">CSS</option>
-      </select>
+        placeholder="Enter Language (e.g., python3, javascript, cpp)"
+      />
 
       {/* Code Editor */}
       <CodeEditor
@@ -106,28 +116,43 @@ const EditSnippet = () => {
 
       {/* Display Tags */}
       <div className="tag-list mt-3">
-  {snippet.tags.map((tag, index) => (
-    <span
-      key={index}
-      className="badge badge-primary m-1"
-      style={{ color: "black", backgroundColor: "lightgray" }} // Ensuring text is black
-    >
-      {tag}{" "}
-      <button
-        className="btn btn-sm btn-danger ml-2"
-        onClick={() => removeTag(tag)}
-      >
-        x
-      </button>
-    </span>
-  ))}
-</div>
-
+        {snippet.tags.map((tag, index) => (
+          <span
+            key={index}
+            className="badge badge-primary m-1"
+            style={{ color: "black", backgroundColor: "lightgray" }} // Ensuring text is black
+          >
+            {tag}{" "}
+            <button
+              className="btn btn-sm btn-danger ml-2"
+              onClick={() => removeTag(tag)}
+            >
+              x
+            </button>
+          </span>
+        ))}
+      </div>
 
       {/* Update Button */}
       <button className="btn btn-primary mt-3" onClick={handleUpdate}>
         Save Changes
       </button>
+
+      {/* Run Code Button */}
+      <button
+        className="btn btn-success mt-3 ml-3 float-right"
+        onClick={handleRunCode}
+        style={{ marginLeft: "10px" }}>
+        Run Code
+      </button>
+
+      {/* Output Section */}
+      {output && (
+        <div className="output-container mt-3">
+          <h3>Output:</h3>
+          <pre className="border p-2">{output}</pre>
+        </div>
+      )}
     </div>
   );
 };

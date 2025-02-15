@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const axios = require("axios");
 require("dotenv").config();
 
 const app = express();
@@ -29,6 +30,26 @@ app.post("/api/snippets", async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
+
+
+// 🔹 Proxy Piston API request
+app.post("/api/run-code", async (req, res) => {
+  const { script, language } = req.body;
+
+  try {
+    const response = await axios.post("https://emkc.org/api/v2/piston/execute", {
+      language: language.toLowerCase(),
+      version: "*", // Latest version
+      files: [{ content: script }]
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Piston API Error:", error);
+    res.status(500).json({ error: "Failed to execute code" });
+  }
+});
+
 
 
 const snippetRoutes = require("./routes/snippetRoutes");

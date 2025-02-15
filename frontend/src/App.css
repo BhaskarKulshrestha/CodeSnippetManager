@@ -119,3 +119,11 @@ button {
   border-radius: 8px;
   border: 1px solid #ccc;
 }
+
+.output-container {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f4f4f4;
+  border-left: 5px solid #007bff;
+  font-family: monospace;
+}
