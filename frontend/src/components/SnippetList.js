@@ -14,14 +14,14 @@ function SnippetList() {
   }, []);
 
   const fetchSnippets = () => {
-    axios.get("`${process.env.REACT_APP_API_URL}/api/snippets`")
+    axios.get("http://localhost:5000/api/snippets")
       .then(response => setSnippets(response.data))
       .catch(error => console.error("Error fetching snippets:", error));
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/snippets/delete/${id}`);
+      await axios.delete(`http://localhost:5000/api/snippets/delete/${id}`);
       fetchSnippets();
     } catch (error) {
       console.error("Error deleting snippet:", error);

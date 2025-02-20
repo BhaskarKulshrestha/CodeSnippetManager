@@ -6,7 +6,7 @@ const SnippetForm = ({ fetchSnippets }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post("`${process.env.REACT_APP_API_URL}/api/snippets/add`", snippet);
+        await axios.post("http://localhost:5000/api/snippets/add", snippet);
         fetchSnippets();
         setSnippet({ title: "", code: "", language: "" });
     };

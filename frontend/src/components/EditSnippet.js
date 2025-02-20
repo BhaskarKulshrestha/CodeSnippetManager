@@ -20,7 +20,7 @@ const EditSnippet = () => {
   // Fetch snippet details
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/snippets/${id}`)
+      .get(`http://localhost:5000/api/snippets/${id}`)
       .then((res) => setSnippet(res.data))
       .catch((err) => console.error("Error fetching snippet:", err));
   }, [id]);
@@ -29,7 +29,7 @@ const EditSnippet = () => {
   const handleUpdate = async () => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/snippets/update/${id}`,
+        `http://localhost:5000/api/snippets/update/${id}`,
         snippet
       );
       navigate("/");
@@ -58,7 +58,7 @@ const EditSnippet = () => {
     setOutput("Running code...");
 
     try {
-      const response = await axios.post("`${process.env.REACT_APP_API_URL}/api/run-code`", {
+      const response = await axios.post("http://localhost:5000/api/run-code", {
         script: snippet.code,
         language: snippet.language.toLowerCase(),
       });
