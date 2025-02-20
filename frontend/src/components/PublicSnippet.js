@@ -7,7 +7,7 @@ function PublicSnippet() {
   const [snippet, setSnippet] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/snippets/${id}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/snippets/${id}`)
       .then(response => setSnippet(response.data))
       .catch(error => console.error("Error fetching snippet:", error));
   }, [id]);
