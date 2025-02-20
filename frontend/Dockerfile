@@ -7,8 +7,9 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Use Nginx for serving static files
+# Use Nginx to serve static files
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
