@@ -17,6 +17,12 @@ const SnippetForm = ({ fetchSnippets }) => {
             <textarea placeholder="Code" value={snippet.code} onChange={(e) => setSnippet({ ...snippet, code: e.target.value })} required />
             <input type="text" placeholder="Language" value={snippet.language} onChange={(e) => setSnippet({ ...snippet, language: e.target.value })} required />
             <button type="submit">Save Snippet</button>
+            <button
+          className="btn btn-warning"
+          onClick={() => (window.location.href = "/")}
+        >
+          🏠Home
+        </button>
         </form>
     );
 };

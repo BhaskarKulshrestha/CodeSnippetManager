@@ -140,11 +140,18 @@ const EditSnippet = () => {
 
       {/* Run Code Button */}
       <button
-        className="btn btn-success mt-3 ml-3 float-right"
+        className="btn btn-success mt-3 ml-3 mr-3 float-right"
         onClick={handleRunCode}
         style={{ marginLeft: "10px" }}>
         Run Code
       </button>
+
+      <button
+          className="btn btn-warning mt-3 ml-3 float-right"
+          onClick={() => (window.location.href = "/")}
+        >
+          🏠Home
+        </button>
 
       {/* Output Section */}
       {output && (
