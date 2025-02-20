@@ -13,17 +13,23 @@ const AddSnippet = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/snippets/add", {
-        title,
-        language,
-        tags,
-        code,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/snippets/add",
+        {
+          title,
+          language,
+          tags,
+          code,
+        }
+      );
 
       console.log("Snippet created:", response.data);
       navigate("/");
     } catch (error) {
-      console.error("Error creating snippet:", error.response?.data || error.message);
+      console.error(
+        "Error creating snippet:",
+        error.response?.data || error.message
+      );
       alert("Failed to create snippet! Check console for details.");
     }
   };
@@ -76,7 +82,15 @@ const AddSnippet = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">Create Snippet</button>
+        <button type="submit" className="btn btn-primary">
+          Create Snippet
+        </button>
+        <button
+          className="btn btn-warning"
+          onClick={() => (window.location.href = "/")}
+        >
+          🏠Home
+        </button>
       </form>
     </div>
   );

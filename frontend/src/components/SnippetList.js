@@ -14,9 +14,10 @@ function SnippetList() {
   }, []);
 
   const fetchSnippets = () => {
-    axios.get("http://localhost:5000/api/snippets")
-      .then(response => setSnippets(response.data))
-      .catch(error => console.error("Error fetching snippets:", error));
+    axios
+      .get("http://localhost:5000/api/snippets")
+      .then((response) => setSnippets(response.data))
+      .catch((error) => console.error("Error fetching snippets:", error));
   };
 
   const handleDelete = async (id) => {
@@ -28,8 +29,10 @@ function SnippetList() {
     }
   };
 
-  const uniqueTags = [...new Set(snippets.flatMap(snippet => snippet.tags))];
-  const uniqueLanguages = [...new Set(snippets.map(snippet => snippet.language))];
+  const uniqueTags = [...new Set(snippets.flatMap((snippet) => snippet.tags))];
+  const uniqueLanguages = [
+    ...new Set(snippets.map((snippet) => snippet.language)),
+  ];
 
   return (
     <div className="container mt-4">
@@ -44,40 +47,94 @@ function SnippetList() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Link to="/add" className="btn btn-primary">➕ Add Snippet</Link>
+        <Link to="/add" className="btn btn-primary">
+          ➕ Add Snippet
+        </Link>
+        <button
+          className="btn btn-warning"
+          onClick={() => (window.location.href = "/")}
+        >
+          🏠Home
+        </button>
       </div>
 
       {/* Filters */}
       <div className="d-flex gap-3 mb-3">
-        <select className="form-select" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
+        <select
+          className="form-select"
+          value={selectedTag}
+          onChange={(e) => setSelectedTag(e.target.value)}
+        >
           <option value="">All Tags</option>
-          {uniqueTags.map(tag => <option key={tag} value={tag}>{tag}</option>)}
+          {uniqueTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
         </select>
 
-        <select className="form-select" value={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)}>
+        <select
+          className="form-select"
+          value={selectedLanguage}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
+        >
           <option value="">All Languages</option>
-          {uniqueLanguages.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+          {uniqueLanguages.map((lang) => (
+            <option key={lang} value={lang}>
+              {lang}
+            </option>
+          ))}
         </select>
       </div>
 
       {/* Snippets List */}
       <div className="row">
         {snippets
-          .filter(snippet => snippet.title.toLowerCase().includes(searchQuery.toLowerCase()))
-          .filter(snippet => !selectedTag || snippet.tags.includes(selectedTag))
-          .filter(snippet => !selectedLanguage || snippet.language === selectedLanguage)
-          .map(snippet => (
+          .filter((snippet) =>
+            snippet.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .filter(
+            (snippet) => !selectedTag || snippet.tags.includes(selectedTag)
+          )
+          .filter(
+            (snippet) =>
+              !selectedLanguage || snippet.language === selectedLanguage
+          )
+          .map((snippet) => (
             <div key={snippet._id} className="col-md-4">
               <div className="card mb-3">
                 <div className="card-body">
                   <h5 className="card-title">{snippet.title}</h5>
                   <pre className="bg-light p-2">{snippet.code}</pre>
-                  <p><strong>Language:</strong> {snippet.language}</p>
-                  <p><strong>Tags:</strong> {snippet.tags.join(", ")}</p>
+                  <p>
+                    <strong>Language:</strong> {snippet.language}
+                  </p>
+                  <p>
+                    <strong>Tags:</strong> {snippet.tags.join(", ")}
+                  </p>
                   <div className="d-flex justify-content-between">
-                    <button className="btn btn-warning" onClick={() => navigate(`/edit/${snippet._id}`)}>✏️ Edit</button>
-                    <button className="btn btn-danger" onClick={() => handleDelete(snippet._id)}>🗑 Delete</button>
-                    <button className="btn btn-info" onClick={() => navigator.clipboard.writeText(`${window.location.origin}/public/${snippet._id}`)}>🔗 Copy Link</button>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => navigate(`/edit/${snippet._id}`)}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(snippet._id)}
+                    >
+                      🗑 Delete
+                    </button>
+                    <button
+                      className="btn btn-info"
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          `${window.location.origin}/public/${snippet._id}`
+                        )
+                      }
+                    >
+                      🔗 Copy Link
+                    </button>
                   </div>
                 </div>
               </div>
