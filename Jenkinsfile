@@ -1,7 +1,7 @@
 pipeline {
-    agent {
+    aagent {
         docker {
-            image 'docker:latest' // Use the Docker agent image
+            image 'jenkins-docker-agent' // Use your custom image
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }

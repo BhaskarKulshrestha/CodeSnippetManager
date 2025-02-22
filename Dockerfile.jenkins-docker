@@ -1,0 +1,10 @@
+FROM docker:latest
+
+USER root
+
+RUN apt-get update && apt-get install -y sudo
+
+RUN addgroup docker
+RUN usermod -aG docker jenkins
+
+USER jenkins
