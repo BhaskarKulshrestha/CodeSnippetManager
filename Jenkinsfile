@@ -6,7 +6,8 @@ pipeline {
         }
     }
     environment {
-        DOCKER_IMAGE = 'bhaskarkul/codesnippetmanager:latest'
+        BACKEND_IMAGE = 'bhaskarkul/codesnippetmanager-backend'
+        FRONTEND_IMAGE = 'bhaskarkul/codesnippetmanager-frontend'
     }
     stages {
         stage('Clone Repository') {
@@ -14,25 +15,47 @@ pipeline {
                 git 'https://github.com/BhaskarKulshrestha/CodeSnippetManager.git'
             }
         }
-        stage('Build') {
+        stage('Build Backend') {
             steps {
-                sh 'mvn clean package'
+                dir('backend') {
+                    script {
+                        docker.build(BACKEND_IMAGE)
+                    }
+                }
             }
         }
-        stage('Docker Build & Push') {
+        stage('Build Frontend') {
             steps {
-                script {
-                    docker.build("$DOCKER_IMAGE")
-                    withCredentials([string(credentialsId: 'docker-hub-password', variable: 'DOCKER_HUB_PASSWORD')]) {
-                        sh 'echo $DOCKER_HUB_PASSWORD | docker login -u bhaskarkul --password-stdin'
+                dir('frontend') {
+                    script {
+                        docker.build(FRONTEND_IMAGE)
                     }
-                    sh 'docker push $DOCKER_IMAGE'
+                }
+            }
+        }
+        stage('Push Images') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    script {
+                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                            docker.image(BACKEND_IMAGE).push()
+                            docker.image(FRONTEND_IMAGE).push()
+                        }
+                    }
                 }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 8081:8080 $DOCKER_IMAGE'
+                sshagent(['cf3cd84a-7d1a-4aed-a5c7-68fdc736bf3e']) {
+                    sh '''
+                    ssh bhaskarkul@your-deployment-server << EOF
+                    docker pull bhaskarkul/backend:latest
+                    docker pull bhaskarkul/frontend:latest
+                    docker-compose -f /docker-compose.yml up -d
+                    EOF
+                    '''
+                }
             }
         }
     }
