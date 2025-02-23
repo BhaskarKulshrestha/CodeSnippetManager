@@ -18,7 +18,37 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     .catch(err => console.log("MongoDB Connection Error:", err));
 
 // 🔹 API Routes
-app.use("/api/snippets", snippetRoutes);
+// app.use("/api/snippets", snippetRoutes);
+
+// ✅ Serve public files
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// ✅ Ensure public directory exists
+const publicDir = path.join(__dirname, 'public');
+if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+}
+
+// ✅ Route to create a snippet and store it in /public/
+app.post('/api/snippets', (req, res) => {
+    const { filename, content } = req.body;
+
+    if (!filename || !content) {
+        return res.status(400).json({ error: 'Filename and content are required' });
+    }
+
+    const filePath = path.join(publicDir, filename);
+
+    fs.writeFile(filePath, content, (err) => {
+        if (err) {
+            console.error('Error saving file:', err);
+            return res.status(500).json({ error: 'Failed to save file' });
+        }
+
+        const fileURL = `http://localhost:5000/public/${filename}`;
+        return res.status(201).json({ message: 'Snippet saved successfully', url: fileURL });
+    });
+});
 
 app.post("/api/run-code", async (req, res) => {
   const { script, language } = req.body;
