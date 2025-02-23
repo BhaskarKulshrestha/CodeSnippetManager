@@ -1,26 +1,26 @@
-# Use Node.js 14 as base image
-FROM node:14
+# Use Node.js as the base image
+FROM node:18
 
 # Set the working directory
 WORKDIR /app
 
-# Copy and install backend dependencies
-COPY package*.json ./
+# Copy package.json and package-lock.json for dependency installation
+COPY package.json package-lock.json ./
+
+# Install backend dependencies
 RUN npm install
 
-# Build frontend
+# Copy frontend files correctly
+COPY frontend/package.json frontend/package-lock.json ./frontend/
 WORKDIR /app/frontend
-COPY ../frontend/package.json ../frontend/package-lock.json ./
 RUN npm install
-COPY ../frontend ./
-RUN npm run build
-
-# Move back to backend folder
 WORKDIR /app
+
+# Copy the full project
 COPY . .
 
-# Expose backend port
-EXPOSE 5000
+# Expose the application port (adjust as needed)
+EXPOSE 3000
 
-# Start backend server
+# Start the application
 CMD ["npm", "start"]
