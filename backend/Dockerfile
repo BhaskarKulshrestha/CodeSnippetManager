@@ -1,14 +1,14 @@
 # Use Node.js LTS version
 FROM node:14
 
-# Set working directory
+# Set working directory for backend
 WORKDIR /app
 
 # Copy backend package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Build frontend (ensure correct path)
+# Build frontend
 WORKDIR /app/frontend
 COPY ../frontend/package.json ../frontend/package-lock.json ./
 RUN npm install
@@ -17,7 +17,7 @@ RUN npm run build
 
 # Move back to backend
 WORKDIR /app
-COPY . .
+COPY . . 
 
 # Expose the backend port
 EXPOSE 5000
