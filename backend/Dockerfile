@@ -1,10 +1,10 @@
-# Use Node.js LTS version
+# Use Node.js 14 as base image
 FROM node:14
 
-# Set working directory for backend
+# Set the working directory
 WORKDIR /app
 
-# Copy backend package files and install dependencies
+# Copy and install backend dependencies
 COPY package*.json ./
 RUN npm install
 
@@ -15,12 +15,12 @@ RUN npm install
 COPY ../frontend ./
 RUN npm run build
 
-# Move back to backend
+# Move back to backend folder
 WORKDIR /app
-COPY . . 
+COPY . .
 
-# Expose the backend port
+# Expose backend port
 EXPOSE 5000
 
-# Start the backend server
+# Start backend server
 CMD ["npm", "start"]
