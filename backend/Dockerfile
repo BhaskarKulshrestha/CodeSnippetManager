@@ -1,20 +1,41 @@
-# Use Node.js LTS version
-FROM node:18
+version: "3.8"
 
-# Set working directory
-WORKDIR /app
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/snippetDB
+    restart: unless-stopped
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - backend
 
-# Install dependencies
-RUN npm install
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose the backend port
-EXPOSE 5000
-
-# Start the backend server
-CMD ["npm", "start"]
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped

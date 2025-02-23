@@ -11,14 +11,14 @@ services:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/snippetDB
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
+    restart: unless-stopped
     depends_on:
       - backend
 
@@ -27,14 +27,15 @@ services:
     container_name: mongo
     ports:
       - "27017:27017"
+    restart: unless-stopped
 
   nginx:
-    image: nginx
-    container_name: nginx
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
     ports:
       - "80:80"
     depends_on:
       - backend
       - frontend
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
