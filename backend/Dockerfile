@@ -1,41 +1,20 @@
-version: "3.8"
+# Use Node.js as the base image
+FROM node:18
 
-services:
-  backend:
-    build: ./backend
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/snippetDB
-    restart: unless-stopped
+# Set the working directory
+WORKDIR /app
 
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    depends_on:
-      - backend
+# Copy package.json and package-lock.json for dependency installation
+COPY package.json package-lock.json ./
 
-  mongo:
-    image: mongo
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
+# Install backend dependencies
+RUN npm install
 
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx.Dockerfile
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - frontend
-    restart: unless-stopped
+# Copy the full project
+COPY . .
+
+# Expose the application port
+EXPOSE 5000
+
+# Start the application
+CMD ["npm", "start"]
