@@ -3,6 +3,9 @@ FROM node:18
 
 # Set working directory
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
+
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
