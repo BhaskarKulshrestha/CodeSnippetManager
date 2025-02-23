@@ -4,22 +4,20 @@ FROM node:14
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy backend package files and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Build frontend inside backend container
+# Build frontend (ensure correct path)
 WORKDIR /app/frontend
-COPY frontend/package.json frontend/package-lock.json ./
+COPY ../frontend/package.json ../frontend/package-lock.json ./
 RUN npm install
-COPY frontend ./
+COPY ../frontend ./
 RUN npm run build
 
 # Move back to backend
 WORKDIR /app
-COPY . . 
+COPY . .
 
 # Expose the backend port
 EXPOSE 5000
