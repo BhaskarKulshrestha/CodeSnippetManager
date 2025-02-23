@@ -10,8 +10,16 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+# Build frontend inside backend container
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+COPY frontend ./
+RUN npm run build
+
+# Move back to backend
+WORKDIR /app
+COPY . . 
 
 # Expose the backend port
 EXPOSE 5000
