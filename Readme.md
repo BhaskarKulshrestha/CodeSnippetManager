@@ -22,7 +22,8 @@ CodeSnippetManager-main/
 │-- package-lock.json          # Project dependencies
 │-- bhaskar_private_key.pem    # Private SSH key (ensure this is kept secure)
 │-- src/                       # Application source code
-│-- tests/                     # Unit and integration tests
+|-- frontend/
+|-- backend/
 ```
 
 ## Setup and Installation
