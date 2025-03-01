@@ -52,11 +52,20 @@ app.post("/api/run-code", async (req, res) => {
 
 
 // 🔹 Serve Frontend (Production Build)
-app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(express.json());
+const _dirname = path.dirname("");
+const buildpath  = path.join(_dirname,"../frontend/build");
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(express.static(buildpath));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "/frontend/build", "index.html"));
+// });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/frontend/build", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "frontend", "build", "index.html"));
 });
+
 
 // 🔹 Start Server
 const PORT = process.env.PORT || 5000;
