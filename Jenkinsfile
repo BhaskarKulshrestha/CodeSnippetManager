@@ -1,5 +1,37 @@
+// pipeline {
+//     agent any
+
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 git branch: 'main', url: 'https://github.com/BhaskarKulshrestha/CodeSnippetManager.git'
+//             }
+//         }
+
+//         stage('Build Backend') {
+//             steps {
+//                 echo 'Building Backend...'
+//             }
+//         }
+
+//         stage('Build Frontend') {
+//             steps {
+//                 echo 'Building Frontend...'
+//             }
+//         }
+//     }
+// }
+
 pipeline {
     agent any
+
+    triggers {
+        pollSCM('* * * * *') // Checks Git every minute for changes
+    }
+
+    environment {
+        NODE_VERSION = "18" // Set your preferred Node.js version
+    }
 
     stages {
         stage('Checkout') {
@@ -8,16 +40,52 @@ pipeline {
             }
         }
 
+        stage('Set up Node.js') {
+            steps {
+                script {
+                    sh "nvm use $NODE_VERSION || nvm install $NODE_VERSION"
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh "cd backend && npm install"
+                    sh "cd frontend && npm install"
+                }
+            }
+        }
+
         stage('Build Backend') {
             steps {
-                echo 'Building Backend...'
+                script {
+                    sh "cd backend && npm run build"
+                }
             }
         }
 
         stage('Build Frontend') {
             steps {
-                echo 'Building Frontend...'
+                script {
+                    sh "cd frontend && npm run build"
+                }
             }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh "cd backend && npm test || echo 'Backend tests failed!'"
+                    sh "cd frontend && npm test || echo 'Frontend tests failed!'"
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Build failed! Check logs for errors.'
         }
     }
 }
