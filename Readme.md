@@ -36,8 +36,7 @@ CodeSnippetManager-main/
 ### Installation Steps
 1. **Clone the Repository**
    ```sh
-   git clone <repository-url>
-   cd CodeSnippetManager-main
+   git clone https://github.com/BhaskarKulshrestha/CodeSnippetManager.git
    ```
 
 2. **Build and Start Services**
