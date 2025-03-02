@@ -29,10 +29,6 @@ pipeline {
         pollSCM('* * * * *') // Checks Git every minute for changes
     }
 
-    environment {
-        NODE_VERSION = "18" // Set your preferred Node.js version
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -44,15 +40,6 @@ pipeline {
             steps {
                 script {
                     sh "nvm use $NODE_VERSION || nvm install $NODE_VERSION"
-                }
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    sh "cd backend && npm install"
-                    sh "cd frontend && npm install"
                 }
             }
         }
