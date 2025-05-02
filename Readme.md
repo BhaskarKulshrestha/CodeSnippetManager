@@ -73,3 +73,6 @@ For questions or issues, please open a GitHub issue.
 
 ## Articles
 [Medium Article](https://medium.com/@2024sl93066/codesnippetmanager-a-devops-integrated-code-management-system-9f430e4fbc4b)
+
+## Video Explanation
+[~~~~~~~ Video Explanation ~~~~~~~~](https://drive.google.com/file/d/1sdV6sL0_xqVJwMOSnODF-nuxp0oW4Yet/view?source=post_page-----9f430e4fbc4b---------------------------------------)
